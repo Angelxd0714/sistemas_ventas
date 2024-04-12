@@ -1,0 +1,60 @@
+{% extends "index.html" %}
+
+{% block titulo %}
+<a class="navbar-brand" href="#">Producto</a>
+{% endblock titulo %}
+
+{% block contenido %}
+<form class="was-validated" method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="nombreproducto" class="form-label">Nombre Producto:</label>
+      <input type="text" name="nombre_producto" class="form-control" id="nombreproducto" placeholder="Escribir nombre" required></input>
+      <div class="invalid-feedback">
+        Por favor ingrese nombre
+      </div>
+    </div>
+     <div class="mb-3">
+      <label for="precio" class="form-label">Precio:</label>
+      <input type="number" name="precio_producto"  class="form-control" id="precio" placeholder="Escribir precio" required></input>
+      <div class="invalid-feedback">
+       Por favor ingrese precio
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="stock" class="form-label">Stock:</label>
+      <input type="number" name="stock" class="form-control" id="stock" placeholder="Ingrese Stock" required></input>
+      <div class="invalid-feedback">
+        Por favor ingrese stock
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="pvp" class="form-label">PVP:</label>
+      <input type="number" name="pvp" class="form-control" id="pvp" placeholder="Ingrese PVP" required></input>
+      <div class="invalid-feedback">
+        Por favor ingrese PVP
+      </div>
+    </div>
+    <div class="mb-3">
+        <label for="categoria" class="form-label">Categoria:</label>
+      <select class="form-select" name="categoria" id="categoria" required aria-label="select example">
+        {% for categoria  in categorias %}
+        <option value="{{categorias.id_categoria}}">{{categoria.nombre_categoria}}</option>
+        {% endfor %}
+      </select>
+      <div class="invalid-feedback">
+        Por favor seleccione categoria
+      </div>
+    </div>
+    <div class="mb-3">
+      <input type="file" name="imagen_producto" id="imagen_producto" class="form-control" aria-label="file example" required>
+      <div class="invalid-feedback">
+        Por favor seleccione imagen
+      </div>
+    </div>
+  
+    <div class="mb-3">
+      <button class="btn btn-primary" type="submit">Submit form</button>
+    </div>
+  </form>
+{% endblock %}

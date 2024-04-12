@@ -1,0 +1,21 @@
+{% extends "index.html" %}  
+{% block titulo %}
+ <a class="navbar-brand" href="#">Categoria</a>
+{% endblock titulo %}
+{% block contenido %}
+
+<div class="content">
+  <div class="container-fluid">
+  
+  <div class="card m-3">
+  <div class="card card-body">
+  {% include "categoriaCreate.html" %} 
+</div>
+  </div>
+   {% include "CategoriaList.html" with categorias=categorias %}
+   
+  </div>
+  
+                  
+
+{% endblock contenido %}

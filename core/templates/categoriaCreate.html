@@ -1,0 +1,11 @@
+<form class="was-validated" method="POST">
+    {% csrf_token %}
+     <div class="mb-3">
+       <label for="validationServer01" class="form-label">Nombre: </label>
+       <input type="text" name="nombre_categoria" class="form-control is-valid" id="validationServer01" value="Mark" required>
+     </div>
+   
+     <div class="mb-3">
+       <button class="btn btn-primary" type="submit">Enviar</button>
+     </div>
+   </form>      
