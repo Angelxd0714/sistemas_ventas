@@ -5,18 +5,18 @@
 {% endblock titulo %}
 
 {% block contenido %}
-<form class="was-validated" method="post">
+<form id="formdata" class="was-validated" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="mb-3">
-      <label for="nombreproducto" class="form-label">Nombre Producto:</label>
-      <input type="text" name="nombre_producto" class="form-control" id="nombreproducto" placeholder="Escribir nombre" required></input>
+      <label for="nombre_producto" class="form-label">Nombre Producto:</label>
+      <input type="text" name="nombre_producto" class="form-control" id="nombre_producto" placeholder="Escribir nombre" required/>
       <div class="invalid-feedback">
         Por favor ingrese nombre
       </div>
     </div>
      <div class="mb-3">
-      <label for="precio" class="form-label">Precio:</label>
-      <input type="number" name="precio_producto"  class="form-control" id="precio" placeholder="Escribir precio" required></input>
+      <label for="precio_producto" class="form-label">Precio:</label>
+      <input type="number" name="precio_producto" id="precio_producto"  class="form-control" id="precio" placeholder="Escribir precio" required></input>
       <div class="invalid-feedback">
        Por favor ingrese precio
       </div>
@@ -30,16 +30,17 @@
     </div>
     <div class="mb-3">
       <label for="pvp" class="form-label">PVP:</label>
-      <input type="number" name="pvp" class="form-control" id="pvp" placeholder="Ingrese PVP" required></input>
+      <input type="number" name="pvp" id="pvp" class="form-control"  placeholder="Ingrese PVP" required></input>
       <div class="invalid-feedback">
         Por favor ingrese PVP
       </div>
     </div>
     <div class="mb-3">
-        <label for="categoria" class="form-label">Categoria:</label>
-      <select class="form-select" name="categoria" id="categoria" required aria-label="select example">
+        <label for="categoria_campo" class="form-label">Categoria:</label>
+      <select class="form-select" name="categoria" id="categoria_campo" required aria-label="seleccione">
+         <option value="">Seleccione</option>
         {% for categoria  in categorias %}
-        <option value="{{categorias.id_categoria}}">{{categoria.nombre_categoria}}</option>
+        <option value={{categoria.id_categoria}}>{{categoria.nombre_categoria}}</option>
         {% endfor %}
       </select>
       <div class="invalid-feedback">
@@ -54,7 +55,8 @@
     </div>
   
     <div class="mb-3">
-      <button class="btn btn-primary" type="submit">Submit form</button>
+      <button class="btn btn-primary" type="submit">Enviar formulario</button>
     </div>
   </form>
+  
 {% endblock %}

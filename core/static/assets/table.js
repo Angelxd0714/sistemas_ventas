@@ -1,11 +1,15 @@
- // Asegúrate de que la URL sea correcta
- $(document).ready(function () {
-    $('#example').DataTable({
-        "language": {
-            "emptyTable": "No hay datos disponibles",
-            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json" // URL del archivo de traducción
-        },
-        "processing": true, // Agrega esto si quieres mostrar un indicador de procesamiento
-        "destroy": true // Esto destruirá la tabla existente y creará una nueva al inicializar DataTables
-    });
-});
+let data = "/static/json/lenguage.json"
+$(document).ready(function () {
+    $.ajax({
+        url: data,
+        dataType: "json",
+        success: function(data) {
+            $('#example').DataTable({
+                "language": data, // Utiliza directamente el objeto data como la configuración de lenguaje
+                "processing": true, // Agrega esto si quieres mostrar un indicador de procesamiento
+                "destroy": true 
+
+            })
+        }
+    })
+})

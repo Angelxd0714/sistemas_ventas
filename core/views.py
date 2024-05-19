@@ -1,9 +1,11 @@
+from django.conf import settings
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from core.models import *
 from django.views.generic import ListView,UpdateView,DeleteView,CreateView
 from django.core.files.uploadedfile import SimpleUploadedFile
+
 # Create your views here.
 def home(request):
     data = {
@@ -66,6 +68,7 @@ class ProductoView(CreateView):
     fields = ['nombre_producto','precio_producto','categoria']
     success_url = reverse_lazy('producto_list')
     def post(self, request, *args, **kwargs):
+        
         if request is None:
             return JsonResponse({'error': 'No se ha proporcionado una solicitud.'})
         nombre_producto = request.POST.get('nombre_producto')
@@ -73,22 +76,54 @@ class ProductoView(CreateView):
         categoria = request.POST.get('categoria')
         stock = request.POST.get('stock')
         pvp = request.POST.get('pvp')
-        imagen_producto = request.FILES.get('imagen_producto')  # Obtener el archivo de imagen desde la solicitud
-        
+        imagen_producto = request.FILES.get('imagen_producto') 
+         # Obtener el archivo de imagen desde la solicitud
+       
+        categoria = Categoria.objects.get(id_categoria=categoria)
         # Crear una instancia de SimpleUploadedFile para el archivo de imagen
         if imagen_producto:
+            
             archivo_imagen = SimpleUploadedFile(imagen_producto.name, imagen_producto.read(), content_type=imagen_producto.content_type)
+            
         else:
             archivo_imagen = None
             return JsonResponse({'error': 'No se ha proporcionado una imagen.'})
         
-        producto = Producto(nombre_producto=nombre_producto, precio_producto=precio_producto,stock=stock ,categoria=categoria, imagen_producto=archivo_imagen,pvp=pvp)
+        producto = Producto(nombre_producto=nombre_producto, precio_producto=precio_producto,stock=stock ,categoria=categoria, imagen=archivo_imagen,pvp=pvp)
         producto.save()
         
-        return JsonResponse(producto)
+        return JsonResponse({"status": "success"})
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categorias'] = Categoria.objects.all()  # Obtener todas las categorías
         return context
     
+class ProductoListView(ListView):
+    model = Producto
+    template_name = 'ProductosAll.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['productos'] = Producto.objects.all()
+         # Obtener todos los productos
+        return context
+    
+class ClientesListView(ListView):
+    model = Cliente
+    template_name = 'clientes.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['clientes'] = Cliente.objects.all()
+        return context
+    def post(self,request, *args, **kwargs):
+        listar_clientes=[]
+
+        try:
+            action = request.POST['action']
+            if action == "searchData":
+                clientes = Cliente.objects.all()
+                for cliente in clientes:
+                    listar_clientes.append(cliente.toJson())
+            return JsonResponse(listar_clientes, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)})

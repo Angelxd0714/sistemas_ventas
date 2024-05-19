@@ -1,4 +1,6 @@
+import os
 from django.db import models
+from django.core.files.storage import FileSystemStorage
 
 
 # Create your models here
@@ -10,6 +12,7 @@ class Cliente(models.Model):
     apellidos = models.CharField(max_length=50, null=False, blank=False, verbose_name="apellidos")
     fecha_nac = models.DateField(null=False, blank=False, verbose_name="fecha_nac")
     direccion = models.CharField(max_length=50, null=False, blank=False, verbose_name="direccion")
+    imagen_usuario = models.ImageField(default=None,null=False, blank=False, verbose_name="imagen_usuario", upload_to="user_imagen/")
     sexo = models.CharField(max_length=1, null=False, blank=False, verbose_name="sexo")
     class Meta:
         db_table = 'cliente'
@@ -42,7 +45,17 @@ class Cliente(models.Model):
         # unique_together = ()
     def __str__(self):
         return self.dni + '|' + self.nombres + '|' + self.apellidos + '|' + self.fecha_nac + '|' + self.direccion + '|' + self.sexo + '|' + str(self.id_cliente)
-
+    def toJson(self):
+        return {
+            'id_cliente': self.id_cliente,
+            'dni': self.dni,
+            'nombres': self.nombres,
+            'apellidos': self.apellidos,
+            'fecha_nac': self.fecha_nac,
+            'direccion': self.direccion,
+            'imagen_usuario': self.imagen_usuario.url if self.imagen_usuario else None,
+            'sexo': self.sexo
+        }
 class Categoria(models.Model):
     id_categoria = models.AutoField(primary_key=True)
     nombre_categoria = models.CharField(max_length=50, null=False, blank=False, verbose_name="nombre_categoria")
@@ -81,7 +94,7 @@ class Producto(models.Model):
     precio_producto = models.IntegerField(null=False, blank=False, verbose_name="precio_producto")
     stock = models.IntegerField(null=False, blank=False, verbose_name="stock")
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
-    imagen = models.ImageField(upload_to="productos", null=True, blank=True)
+    imagen = models.ImageField(upload_to="productos/", null=True, blank=True)
     pvp = models.IntegerField(null=False, blank=False, verbose_name="pvp")
     class Meta:
         db_table = 'producto'
