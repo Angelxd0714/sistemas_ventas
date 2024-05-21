@@ -120,10 +120,26 @@ class ClientesListView(ListView):
 
         try:
             action = request.POST['action']
-            if action == "searchData":
+            if action == "searchable":
                 clientes = Cliente.objects.all()
                 for cliente in clientes:
                     listar_clientes.append(cliente.toJson())
-            return JsonResponse(listar_clientes, safe=False)
+            return JsonResponse(data=listar_clientes, safe=False)
         except Exception as e:
             return JsonResponse({'error': str(e)})
+class CLientesCreate(CreateView):
+    model = Cliente
+    template_name = 'clientes.html'
+    fields = ['dni','nombres','apellidos','fecha_nac','direccion','imagen_usuario','sexo']
+    
+    def post(self, request, *args, **kwargs):
+        dni = request.POST.get('dni')
+        nombres = request.POST.get('nombres')
+        apellidos = request.POST.get('apellidos')
+        fecha_nac = request.POST.get('fecha_nac')
+        direccion = request.POST.get('direccion')
+        imagen_usuario = request.FILES.get('imagen_usuario')
+        sexo = request.POST.get('sexo')
+        cliente = Cliente(dni=dni, nombres=nombres, apellidos=apellidos, fecha_nac=fecha_nac, direccion=direccion, imagen_usuario=imagen_usuario, sexo=sexo)
+        cliente.save()
+        return JsonResponse({"status": "success"})
