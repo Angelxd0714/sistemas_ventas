@@ -23,28 +23,25 @@
                             <th>Foto</th>
                             <th>Nombres</th>
                             <th>Apellidos</th>
-                            <th>Start date</th>
-                            <th>Salary</th>
+                            <th>Fecha nacimiento</th>
+                            <th>direccion</th>
+                            <th>Dni</th>
+                            <th>sexo</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                            <td>Edinburgh</td>
-                            <td>61</td>
-                            <td>2011-04-25</td>
-                            <td>$320,800</td>
-                          </tr>
+                         
                         </tbody>
                         <tfoot>
                           <tr>
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>Office</th>
-                            <th>Age</th>
-                            <th>Start date</th>
-                            <th>Salary</th>
+                            <th>id</th>
+                            <th>Foto</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Fecha nacimiento</th>
+                            <th>direccion</th>
+                            <th>Dni</th>
+                            <th>sexo</th>
                           </tr>
                         </tfoot>
                       </table>
@@ -65,5 +62,48 @@
     </div>
     <!-- /.container-fluid -->
   </div>
-
+<div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dataModalLabel">Add New Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="dataForm">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="position">Position</label>
+                            <input type="text" class="form-control" id="position" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="office">Office</label>
+                            <input type="text" class="form-control" id="office" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" class="form-control" id="age" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" class="form-control" id="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="salary">Salary</label>
+                            <input type="number" class="form-control" id="salary" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Data</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
  {% endblock contenido  %}
+
+ 

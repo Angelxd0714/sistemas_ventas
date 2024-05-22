@@ -5,19 +5,32 @@ $(document).ready(function () {
         dataType: "json",
         success: function (data) {
             $('#example2').DataTable({
+               
                 "language": data, // Utiliza directamente el objeto data como la configuración de lenguaje
-                "processing": true, // Agrega esto si quieres mostrar un indicador de procesamiento
-                "destroy": true,
-                responsive:true,
+                processing: true, // Agrega esto si quieres mostrar un indicador de procesamiento
+                destroy: true,
+                responsive: true,
+                layout: {
+                    topStart: {
+                        buttons: [{
+                            text: "Insertar",
+                            className:"btn btn-primary",
+                            action: function (e, dt, node, config) {
+                               $("#dataModal").modal("show");
+                            }
+                        }
+                        ]
+                    }
+                },
                 ajax: (
                     {
                         url: window.location.pathname,
                         type: "POST",
-                         headers: {
-            'X-CSRFToken': getCookie('csrftoken')  // Añade el token CSRF como encabezado
-        },
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken')  // Añade el token CSRF como encabezado
+                        },
                         data: {
-                           "action":"searchdata",
+                            "action": "searchdata",
                         },
                         dataSrc: ""
                     }
@@ -43,11 +56,11 @@ $(document).ready(function () {
                         }
                     },
                     {
-                        targets: [1],
+                        targets: [6],
                         class: "text-center",
                         searchable: false,
                         render: function (data, type, row) {
-                            return data
+                            return `<img src="${data}"/ alt="">`
                         }
                     },
                     {
@@ -83,7 +96,7 @@ $(document).ready(function () {
                         }
                     },
                     {
-                        targets: [6],
+                        targets: [1],
                         class: "text-center",
                         searchable: false,
                         render: function (data, type, row) {
@@ -97,15 +110,16 @@ $(document).ready(function () {
                         render: function (data, type, row) {
                             return data
                         }
-                    } 
+                    }
 
 
 
 
                 ],
-                initComplete: function(settings, json) {
-                 
-                }
+                initComplete: function (settings, json) {
+
+                },
+                
             })
         }
     })
