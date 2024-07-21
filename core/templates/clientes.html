@@ -1,8 +1,7 @@
-{% extends "index.html" %}
+{% extends 'index.html' %}
 
-
- {% block contenido  %} 
- <div class="content">
+{% block contenido %}
+  <div class="content">
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
@@ -29,9 +28,7 @@
                             <th>sexo</th>
                           </tr>
                         </thead>
-                        <tbody>
-                         
-                        </tbody>
+                        <tbody></tbody>
                         <tfoot>
                           <tr>
                             <th>id</th>
@@ -62,66 +59,55 @@
     </div>
     <!-- /.container-fluid -->
   </div>
-<div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form class="row g-3">
-  <div class="col-md-6">
-    <label for="inputEmail4" class="form-label">Email</label>
-    <input type="email" class="form-control" id="inputEmail4">
-  </div>
-  <div class="col-md-6">
-    <label for="inputPassword4" class="form-label">Password</label>
-    <input type="password" class="form-control" id="inputPassword4">
-  </div>
-  <div class="col-12">
-    <label for="inputAddress" class="form-label">Address</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-  </div>
-  <div class="col-12">
-    <label for="inputAddress2" class="form-label">Address 2</label>
-    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-  </div>
-  <div class="col-md-6">
-    <label for="inputCity" class="form-label">City</label>
-    <input type="text" class="form-control" id="inputCity">
-  </div>
-  <div class="col-md-4">
-    <label for="inputState" class="form-label">State</label>
-    <select id="inputState" class="form-select">
-      <option selected>Choose...</option>
-      <option>...</option>
-    </select>
-  </div>
-  <div class="col-md-2">
-    <label for="inputZip" class="form-label">Zip</label>
-    <input type="text" class="form-control" id="inputZip">
-  </div>
-  <div class="col-12">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
-      <label class="form-check-label" for="gridCheck">
-        Check me out
-      </label>
-    </div>
-  </div>
-  <div class="col-12">
-    <button type="submit" class="btn btn-primary">Sign in</button>
-  </div>
-</form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+  <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" method="post" enctype="multipart/form-data" id="formdataCLiente" action="create">
+          {% csrf_token %}
+            <div class="col-md-6">
+              <label for="dni" class="form-label">DNI</label>
+              <input type="number" name="dni" class="form-control" id="dni" />
+            </div>
+            <div class="col-12">
+              <label for="nombres" class="form-label">Nombres</label>
+              <input type="text" name="nombres" class="form-control" id="nombres" placeholder="..." />
+            </div>
+            <div class="col-12">
+              <label for="apellidos" class="form-label">Apellidos</label>
+              <input type="text" class="form-control" name="apellidos" id="apellidos" placeholder="..." />
+            </div>
+            <div class="col-md-6">
+              <label for="fecha_nac" class="form-label">Fecha nacmiento</label>
+              <input type="date" name="fecha_nac" class="form-control" id="fecha_nac" />
+            </div>
+            <div class="col-md-6">
+              <label for="direccion" class="form-label">direccion</label>
+              <input type="text" name="direccion" class="form-control" id="direccion" />
+            </div>
+            <div class="col-md-6">
+              <label for="imagen_usuario" class="form-label">Imagen</label>
+              <input class="form-control" name="imagen_usuario" type="file" id="imagen_usuario" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Seleccione sexo:</label>
+              <select class="form-select" aria-label="Seleccione" name="sexo" id="sexo">
+                <option selected>SELECCIONE SEXO</option>
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+                <option value="O">Otro</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary" id="save">Guardar</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
- {% endblock contenido  %}
-
- 
+{% endblock %}

@@ -119,8 +119,8 @@ class ClientesListView(ListView):
         listar_clientes=[]
 
         try:
-            action = request.POST['action']
-            if action == "searchable":
+            action = request.POST.get("action")
+            if action == "searchdata":
                 clientes = Cliente.objects.all()
                 for cliente in clientes:
                     listar_clientes.append(cliente.toJson())
@@ -133,13 +133,22 @@ class CLientesCreate(CreateView):
     fields = ['dni','nombres','apellidos','fecha_nac','direccion','imagen_usuario','sexo']
     
     def post(self, request, *args, **kwargs):
-        dni = request.POST.get('dni')
-        nombres = request.POST.get('nombres')
-        apellidos = request.POST.get('apellidos')
-        fecha_nac = request.POST.get('fecha_nac')
-        direccion = request.POST.get('direccion')
-        imagen_usuario = request.FILES.get('imagen_usuario')
-        sexo = request.POST.get('sexo')
-        cliente = Cliente(dni=dni, nombres=nombres, apellidos=apellidos, fecha_nac=fecha_nac, direccion=direccion, imagen_usuario=imagen_usuario, sexo=sexo)
-        cliente.save()
-        return JsonResponse({"status": "success"})
+        print(request.POST.get("imagen_usuario"))
+        try:
+            action = request.POST.get('action')
+            if action == 'create':
+                dni = request.POST.get('dni')
+                nombres = request.POST.get('nombres')
+                apellidos = request.POST.get('apellidos')
+                fecha_nac = request.POST.get('fecha_nac')
+                direccion = request.POST.get('direccion')
+                imagen_usuario = request.FILES.get('imagen_usuario')
+                sexo = request.POST.get('sexo')
+                cliente = Cliente(dni=dni, nombres=nombres, apellidos=apellidos, fecha_nac=fecha_nac, direccion=direccion, imagen_usuario=imagen_usuario, sexo=sexo)
+                cliente.save()
+                return JsonResponse({"status": "success"})
+            else:
+                return JsonResponse({'error': 'Invalid action'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+           

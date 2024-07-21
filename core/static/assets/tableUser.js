@@ -4,38 +4,33 @@ $(document).ready(function () {
         url: url,
         dataType: "json",
         success: function (data) {
-            $('#example2').DataTable({
-               
-                "language": data, // Utiliza directamente el objeto data como la configuración de lenguaje
-                processing: true, // Agrega esto si quieres mostrar un indicador de procesamiento
+            var table = $('#example2').DataTable({
+                "language": data,
+                processing: true,
                 destroy: true,
                 responsive: true,
                 layout: {
                     topStart: {
                         buttons: [{
                             text: "Insertar",
-                            className:"btn btn-primary",
+                            className: "btn btn-primary",
                             action: function (e, dt, node, config) {
-                               $("#dataModal").modal("show");
+                                $("#dataModal").modal("show");
                             }
-                        }
-                        ]
+                        }]
                     }
                 },
-                ajax: (
-                    {
-                        url: window.location.pathname,
-                        type: "POST",
-                        headers: {
-                            'X-CSRFToken': getCookie('csrftoken')  // Añade el token CSRF como encabezado
-                        },
-                        data: {
-                            "action": "searchdata",
-                        },
-                        dataSrc: ""
-                    }
-
-                ),
+                ajax: {
+                    url: window.location.pathname,
+                    type: "POST",
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    data: function (d) {
+                        d.action = 'searchdata';
+                    },
+                    dataSrc: ""
+                },
                 columns: [
                     { data: "id_cliente" },
                     { data: "dni" },
@@ -44,87 +39,61 @@ $(document).ready(function () {
                     { data: "fecha_nac" },
                     { data: "direccion" },
                     { data: "imagen_usuario" },
-                    { data: "sexo" },
+                    { data: "sexo" }
                 ],
-                columnsDefs: [
-                    {
-                        targets: [0],
-                        class: "text-center",
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data
-                        }
-                    },
+                columnDefs: [
+                    { targets: [0, 1, 2, 3, 4, 5, 7], className: "text-center", searchable: false },
                     {
                         targets: [6],
-                        class: "text-center",
+                        className: "text-center",
                         searchable: false,
-                        render: function (data, type, row) {
-                            return `<img src="${data}"/ alt="">`
-                        }
-                    },
-                    {
-                        targets: [2],
-                        class: "text-center",
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data
-                        }
-                    },
-                    {
-                        targets: [3],
-                        class: "text-center",
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data
-                        }
-                    },
-                    {
-                        targets: [4],
-                        class: "text-center",
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data
-                        }
-                    },
-                    {
-                        targets: [5],
-                        class: "text-center",
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data
-                        }
-                    },
-                    {
-                        targets: [1],
-                        class: "text-center",
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data
-                        }
-                    },
-                    {
-                        targets: [7],
-                        class: "text-center",
-                        searchable: false,
-                        render: function (data, type, row) {
-                            return data
+                        render: function (data) {
+                            return `<img src="${data}" alt="">`;
                         }
                     }
+                ]
+            });
 
-
-
-
-                ],
-                initComplete: function (settings, json) {
-
-                },
+            $("#formdataCliente").on('submit', function (e) {
+                e.preventDefault();
+                let dni = $("#dni")
+                let nombres = $("#nombres").val()
+                let apellidos = $("#apellidos").val()
+                let fecha_nac = $("#fecha_nac").val()
+                let direccion = $("#direccion").val()
+                let imagen_usuario = $("#imagen_usuario").prop("files")[0]
+                let sexo = $("#sexo option:selected") 
+                var data = new FormData();
+                data.append("dni",dni)
+                data.append("nombres",nombres)
+                data.append("apellidos",apellidos)
+                data.append("fecha_nac",fecha_nac)
+                data.append("imagen_usuario",imagen_usuario)
+                data.append("direccion", direccion)
+                data.append("sexo",sexo)
                 
-            })
+                $.ajax({
+                    url: "create",
+                    type: "POST",
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log("Success:", response);
+                        $("#dataModal").modal("hide");
+                        table.ajax.reload(null, false);
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            });
         }
-    })
-
-})
+    });
+});
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {

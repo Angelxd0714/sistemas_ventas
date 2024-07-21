@@ -119,6 +119,7 @@ class Ventas(models.Model):
     fecha_venta = models.DateField(null=False, blank=False, verbose_name="fecha_venta")
     subtotal = models.DecimalField(max_digits=5, decimal_places=2,null=False, blank=False, verbose_name="subtotal")
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    venta_det = models.ForeignKey("DetalleVenta", on_delete=models.CASCADE,default="")
     iva= models.DecimalField(max_digits=5, decimal_places=2,null=False, blank=False, verbose_name="iva")
     total = models.DecimalField(max_digits=5, decimal_places=2,null=False, blank=False, verbose_name="total")
     class Meta:
@@ -139,7 +140,6 @@ class DetalleVenta(models.Model):
     id_detalle_venta = models.AutoField(primary_key=True)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.IntegerField(null=False, blank=False, verbose_name="cantidad")
-    venta = models.ForeignKey(Ventas, on_delete=models.CASCADE)
     precio = models.DecimalField(max_digits=5, decimal_places=2, null=False, blank=False, verbose_name="precio")
     subtotal = models.DecimalField(max_digits=5, decimal_places=2, null=False, blank=False, verbose_name="subtotal")
     class Meta:

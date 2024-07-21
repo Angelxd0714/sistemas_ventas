@@ -5,7 +5,7 @@
 {% endblock titulo %}
 
 {% block contenido %}
-<form id="formdata" class="was-validated" method="post" enctype="multipart/form-data">
+<form id="formdata" class="was-validated" method="post" enctype="multipart/form-data" action="listar">
     {% csrf_token %}
     <div class="mb-3">
       <label for="nombre_producto" class="form-label">Nombre Producto:</label>
