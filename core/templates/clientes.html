@@ -1,113 +1,377 @@
-{% extends 'index.html' %}
-
-{% block contenido %}
-  <div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body">
-              <div class="card-body">
-                <div id="example2_wrapper" class="dataTables_wrapper dt-boostrap5">
-                  <div class="row">
-                    <div class="col-sm-12 col-md-6"></div>
-                    <div class="col-sm-12 col-md-6"></div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <table id="example2" class="table table-striped" style="width:100%">
-                        <thead>
-                          <tr>
-                            <th>id</th>
-                            <th>Foto</th>
-                            <th>Nombres</th>
-                            <th>Apellidos</th>
-                            <th>Fecha nacimiento</th>
-                            <th>direccion</th>
-                            <th>Dni</th>
-                            <th>sexo</th>
-                          </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot>
-                          <tr>
-                            <th>id</th>
-                            <th>Foto</th>
-                            <th>Nombres</th>
-                            <th>Apellidos</th>
-                            <th>Fecha nacimiento</th>
-                            <th>direccion</th>
-                            <th>Dni</th>
-                            <th>sexo</th>
-                          </tr>
-                        </tfoot>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
+{% extends 'index.html' %} {% block contenido %}
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Gestión de Clientes</h3>
+            <div class="card-tools">
+              <button
+                class="btn btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#clienteModal"
+              >
+                <i class="bi bi-plus-circle me-1"></i> Nuevo Cliente
+              </button>
             </div>
           </div>
 
-          <!-- /.card -->
+          <div class="card-body">
+            <div class="table-responsive">
+              <table
+                id="clientesTable"
+                class="table table-striped table-hover table-bordered w-100"
+              >
+                <thead class="table-dark">
+                  <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Foto</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Fecha Nac.</th>
+                    <th>Dirección</th>
+                    <th class="text-center">DNI</th>
+                    <th class="text-center">Sexo</th>
+                    <th class="text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for cliente in clientes %}
+                  <tr>
+                    <td class="text-center">{{ cliente.id }}</td>
+                    <td class="text-center">
+                      {% if cliente.imagen_usuario %}
+                      <img
+                        src="{{ cliente.imagen_usuario.url }}"
+                        alt="Foto"
+                        class="img-thumbnail"
+                        width="50"
+                      />
+                      {% else %}
+                      <span class="badge bg-secondary">Sin foto</span>
+                      {% endif %}
+                    </td>
+                    <td>{{ cliente.nombres }}</td>
+                    <td>{{ cliente.apellidos }}</td>
+                    <td>{{ cliente.fecha_nac|date:"d/m/Y" }}</td>
+                    <td>{{ cliente.direccion|truncatechars:20 }}</td>
+                    <td class="text-center">{{ cliente.dni }}</td>
+                    <td class="text-center">
+                      {% if cliente.sexo == "M" %}
+                      <span class="badge bg-primary">Masculino</span>
+                      {% elif cliente.sexo == "F" %}
+                      <span class="badge bg-pink">Femenino</span>
+                      {% else %}
+                      <span class="badge bg-secondary">Otro</span>
+                      {% endif %}
+                    </td>
+                    <td class="text-center">
+                      <div class="btn-group btn-group-sm">
+                        <button
+                          class="btn btn-outline-primary edit-btn"
+                          data-bs-toggle="modal"
+                          data-bs-target="#clienteModal"
+                          data-id="{{ cliente.id }}"
+                        >
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button
+                          class="btn btn-outline-danger delete-btn"
+                          data-url="{% url 'clientes_delete' cliente.id %}"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <!-- /.col-md-6 -->
-
-        <!-- /.col-md-6 -->
       </div>
-      <!-- /.row -->
     </div>
-    <!-- /.container-fluid -->
   </div>
-  <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+</div>
+
+<!-- Modal para agregar/editar cliente -->
+<div class="modal fade" id="clienteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Nuevo Cliente</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form
+        method="post"
+        enctype="multipart/form-data"
+        id="clienteForm"
+        class="needs-validation"
+        novalidate
+      >
         <div class="modal-body">
-          <form class="row g-3" method="post" enctype="multipart/form-data" id="formdataCLiente" action="create">
           {% csrf_token %}
+          <input type="hidden" name="cliente_id" id="clienteId" />
+
+          <div class="row g-3">
             <div class="col-md-6">
               <label for="dni" class="form-label">DNI</label>
-              <input type="number" name="dni" class="form-control" id="dni" />
+              <input
+                type="number"
+                name="dni"
+                class="form-control"
+                id="dni"
+                min="10000000"
+                max="99999999"
+                required
+              />
+              <div class="invalid-feedback">
+                Ingrese un DNI válido (8 dígitos)
+              </div>
             </div>
-            <div class="col-12">
-              <label for="nombres" class="form-label">Nombres</label>
-              <input type="text" name="nombres" class="form-control" id="nombres" placeholder="..." />
-            </div>
-            <div class="col-12">
-              <label for="apellidos" class="form-label">Apellidos</label>
-              <input type="text" class="form-control" name="apellidos" id="apellidos" placeholder="..." />
-            </div>
+
             <div class="col-md-6">
-              <label for="fecha_nac" class="form-label">Fecha nacmiento</label>
-              <input type="date" name="fecha_nac" class="form-control" id="fecha_nac" />
-            </div>
-            <div class="col-md-6">
-              <label for="direccion" class="form-label">direccion</label>
-              <input type="text" name="direccion" class="form-control" id="direccion" />
-            </div>
-            <div class="col-md-6">
-              <label for="imagen_usuario" class="form-label">Imagen</label>
-              <input class="form-control" name="imagen_usuario" type="file" id="imagen_usuario" />
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Seleccione sexo:</label>
-              <select class="form-select" aria-label="Seleccione" name="sexo" id="sexo">
-                <option selected>SELECCIONE SEXO</option>
+              <label for="sexo" class="form-label">Sexo</label>
+              <select class="form-select" name="sexo" id="sexo" required>
+                <option value="" selected disabled>Seleccione...</option>
                 <option value="M">Masculino</option>
                 <option value="F">Femenino</option>
                 <option value="O">Otro</option>
               </select>
+              <div class="invalid-feedback">Seleccione el sexo</div>
             </div>
-            <div class="col-12">
-              <button type="submit" class="btn btn-primary" id="save">Guardar</button>
+
+            <div class="col-md-6">
+              <label for="nombres" class="form-label">Nombres</label>
+              <input
+                type="text"
+                name="nombres"
+                class="form-control"
+                id="nombres"
+                pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+"
+                required
+              />
+              <div class="invalid-feedback">Solo letras y espacios</div>
             </div>
-          </form>
+
+            <div class="col-md-6">
+              <label for="apellidos" class="form-label">Apellidos</label>
+              <input
+                type="text"
+                class="form-control"
+                name="apellidos"
+                id="apellidos"
+                pattern="[A-Za-záéíóúÁÉÍÓÚñÑ ]+"
+                required
+              />
+              <div class="invalid-feedback">Solo letras y espacios</div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="fecha_nac" class="form-label">Fecha Nacimiento</label>
+              <input
+                type="date"
+                name="fecha_nac"
+                class="form-control"
+                id="fecha_nac"
+                required
+              />
+              <div class="invalid-feedback">Seleccione una fecha</div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="direccion" class="form-label">Dirección</label>
+              <input
+                type="text"
+                name="direccion"
+                class="form-control"
+                id="direccion"
+                required
+              />
+              <div class="invalid-feedback">Ingrese una dirección</div>
+            </div>
+
+            <div class="col-md-12">
+              <label for="imagen_usuario" class="form-label"
+                >Imagen de Perfil</label
+              >
+              <input
+                class="form-control"
+                name="imagen_usuario"
+                type="file"
+                id="imagen_usuario"
+                accept="image/*"
+              />
+              <div class="form-text">Formatos: JPG, PNG (Max. 2MB)</div>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save me-1"></i> Guardar
+          </button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  $(document).ready(function () {
+    // Inicializar DataTable
+    var table = $("#clientesTable").DataTable({
+      responsive: true,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
+      },
+      columnDefs: [
+        { orderable: false, targets: [1, 8] },
+        { searchable: false, targets: [1, 8] },
+      ],
+    });
+
+    // Función para actualizar la tabla sin recargar la página (usando POST y JSON)
+    function refreshTable() {
+      $.ajax({
+        url: "{% url 'clientes_listar' %}",
+        type: "POST",
+        data: {
+          action: "searchdata",
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (data) {
+          table.clear();
+          data.forEach(function (cliente) {
+            table.row.add([
+              cliente.id,
+              cliente.imagen_usuario
+                ? `<img src="${cliente.imagen_usuario}" width="50" class="img-thumbnail">`
+                : `<span class="badge bg-secondary">Sin foto</span>`,
+              cliente.nombres,
+              cliente.apellidos,
+              cliente.fecha_nac,
+              cliente.direccion,
+              cliente.dni,
+              cliente.sexo === "M"
+                ? '<span class="badge bg-primary">Masculino</span>'
+                : cliente.sexo === "F"
+                ? '<span class="badge bg-pink">Femenino</span>'
+                : '<span class="badge bg-secondary">Otro</span>',
+              `<div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-primary edit-btn" data-id="${cliente.id}" data-bs-toggle="modal" data-bs-target="#clienteModal"><i class="bi bi-pencil"></i></button>
+                  <button class="btn btn-outline-danger delete-btn" data-url="/clientes/eliminar/${cliente.id}/"><i class="bi bi-trash"></i></button>
+               </div>`,
+            ]);
+          });
+          table.draw();
+        },
+        error: function (xhr) {
+          alert("Error al refrescar la tabla: " + xhr.responseText);
+        },
+      });
+    }
+
+    // Manejar envío del formulario
+    $("#clienteForm").submit(function (e) {
+      e.preventDefault();
+
+      var formData = new FormData(this);
+      var url = $("#clienteId").val()
+        ? "{% url 'clientes_edit' 0 %}".replace("0", $("#clienteId").val())
+        : "{% url 'clientes_create' %}";
+
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          if (response.success) {
+            $("#clienteModal").modal("hide");
+            refreshTable();
+            showToast("Cliente guardado exitosamente", "success");
+          } else {
+            showFormErrors(response.errors);
+          }
+        },
+        error: function (xhr) {
+          alert("Error: " + xhr.responseText);
+        },
+      });
+    });
+
+    // Mostrar errores de validación del servidor
+    function showFormErrors(errors) {
+      $(".is-invalid").removeClass("is-invalid");
+      $(".invalid-feedback").text("");
+
+      for (var field in errors) {
+        $("#" + field).addClass("is-invalid");
+        $("#" + field)
+          .next(".invalid-feedback")
+          .text(errors[field][0]);
+      }
+    }
+
+    // Mostrar notificación toast
+    function showToast(message, type) {
+      // Implementa tu toast preferido (Bootstrap, SweetAlert, etc.)
+      alert(message); // Ejemplo básico
+    }
+
+    // Manejar edición
+    $(document).on("click", ".edit-btn", function () {
+      var clienteId = $(this).data("id");
+      $("#modalTitle").text("Editar Cliente");
+      $("#clienteId").val(clienteId);
+
+      $.get(
+        "{% url 'clientes_edit' 0 %}".replace("0", clienteId),
+        function (data) {
+          for (var field in data) {
+            $("#" + field).val(data[field]);
+          }
+        }
+      );
+    });
+
+    // Manejar eliminación
+    $(document).on("click", ".delete-btn", function () {
+      if (confirm("¿Está seguro de eliminar este cliente?")) {
+        $.post(
+          $(this).data("url"),
+          { csrfmiddlewaretoken: "{{ csrf_token }}" },
+          function () {
+            refreshTable();
+            showToast("Cliente eliminado", "success");
+          }
+        );
+      }
+    });
+
+    // Resetear modal
+    $("#clienteModal").on("hidden.bs.modal", function () {
+      $("#clienteForm")[0].reset();
+      $("#modalTitle").text("Nuevo Cliente");
+      $("#clienteId").val("");
+      $(".is-invalid").removeClass("is-invalid");
+    });
+  });
+</script>
 {% endblock %}

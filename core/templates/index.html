@@ -3,125 +3,159 @@
 <html lang="es">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"  crossorigin="anonymous" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.bootstrap5.css" rel="stylesheet"  crossorigin="anonymous" />
+    <title>Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.bootstrap5.css"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .navbar {
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+      }
+      .card {
+        border-radius: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      }
+      .table thead th {
+        background-color: #0d6efd;
+        color: #fff;
+      }
+      .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #f2f6fc;
+      }
+    </style>
   </head>
   <body>
-    <div class="container-fluid">
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          {% block titulo %}
-            <a class="navbar-brand" href="#">Dashboard</a>
-          {% endblock %}
-
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Ventas</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="{% url 'clientes_listar' %}">Clientes</a>
-              </li>
-              <li class="nav-item dropdown">
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'producto_create' %}">Ingresar Productos</a>
-              </li>
-               <li class="nav-item">
-                <a class="nav-link active" href="{% url 'producto_listar' %}">Listar Productos</a>
-              </li>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a class="dropdown-item" href="#">Dashboard</a>
-                  </li>
-                 
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'categoria_list' %}">Categorias</a>
-              </li>
-            </ul>
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#"
+          ><i class="bi bi-speedometer2"></i> Dashboard</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'dashboard' %}"
+                ><i class="bi bi-bar-chart"></i> Ventas</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'clientes_listar' %}"
+                ><i class="bi bi-people"></i> Clientes</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'producto_create' %}"
+                ><i class="bi bi-plus-square"></i> Ingresar Productos</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'producto_listar' %}"
+                ><i class="bi bi-box-seam"></i> Listar Productos</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'categoria_list' %}"
+                ><i class="bi bi-tags"></i> Categorías</a
+              >
+            </li>
+          </ul>
+          <form class="d-flex" role="search">
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Buscar"
+              aria-label="Buscar"
+            />
+            <button class="btn btn-light" type="submit">
+              <i class="bi bi-search"></i>
+            </button>
+          </form>
         </div>
-      </nav>
+      </div>
+    </nav>
+    <div class="container">
       {% block contenido %}
-        <div class="content">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="card-body">
-                      <div id="example2_wrapper" class="dataTables_wrapper dt-boostrap5">
-                        <div class="row">
-                          <div class="col-sm-12 col-md-6"></div>
-                          <div class="col-sm-12 col-md-6"></div>
-                        </div>
-                        <div class="row">
-                          <div class="col-sm-12">
-                            <table id="example3" class="table table-striped" style="width:100%">
-                              <thead>
-                                <tr>
-                                  <th>Name</th>
-                                  <th>Position</th>
-                                  <th>Office</th>
-                                  <th>Age</th>
-                                  <th>Start date</th>
-                                  <th>Salary</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Tiger Nixon</td>
-                                  <td>System Architect</td>
-                                  <td>Edinburgh</td>
-                                  <td>61</td>
-                                  <td>2011-04-25</td>
-                                  <td>$320,800</td>
-                                </tr>
-                              </tbody>
-                              <tfoot>
-                                <tr>
-                                  <th>Name</th>
-                                  <th>Position</th>
-                                  <th>Office</th>
-                                  <th>Age</th>
-                                  <th>Start date</th>
-                                  <th>Salary</th>
-                                </tr>
-                              </tfoot>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- /.card -->
-              </div>
-              <!-- /.col-md-6 -->
-
-              <!-- /.col-md-6 -->
+      <div class="row justify-content-center">
+        <div class="col-lg-11">
+          <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0"><i class="bi bi-table"></i> Tabla de Datos</h5>
             </div>
-            <!-- /.row -->
+            <div class="card-body">
+              <div class="table-responsive">
+                <table
+                  id="example3"
+                  class="table table-striped table-hover align-middle"
+                >
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Position</th>
+                      <th>Office</th>
+                      <th>Age</th>
+                      <th>Start date</th>
+                      <th>Salary</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Tiger Nixon</td>
+                      <td>System Architect</td>
+                      <td>Edinburgh</td>
+                      <td>61</td>
+                      <td>2011-04-25</td>
+                      <td>$320,800</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th>Name</th>
+                      <th>Position</th>
+                      <th>Office</th>
+                      <th>Age</th>
+                      <th>Start date</th>
+                      <th>Salary</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
           </div>
-          <!-- /.container-fluid -->
         </div>
+      </div>
       {% endblock %}
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.js"></script>

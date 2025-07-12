@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:latest #  Creo el contenedor de la base de datos
+    environment: # Configuración de la base de datos
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${USER_PASSWORD}
+    ports: # configuracion del puerto
+      - "5432:5432"
+    restart: always
+    healthcheck: # Verifica que la base de datos esté lista
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    network:
+      - app_network
+    depends_on:
+      - web
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings
+    command: python manage.py runserver
+
+volumes:
+  postgres_data:
+    driver: local
+networks:
+  app_network:
+    driver: bridge
